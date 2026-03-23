@@ -1,6 +1,6 @@
 {
   "name": "idempotweet",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "dev": "DATABASE_URL=${DATABASE_URL:-postgresql://codeacademy:codeacademy@localhost:5432/codeacademy} next dev",
