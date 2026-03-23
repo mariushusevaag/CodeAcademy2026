@@ -2,7 +2,7 @@ name: Run tests
 on:
   pull_request:
     paths:
-      - "1-DevOps/idempotweet/**"
+      - 1-DevOps/idempotweet/**
   workflow_call:
 jobs:
   ci:
