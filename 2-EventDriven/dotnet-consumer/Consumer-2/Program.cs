@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using CodeAcademy.DotnetConsumer.Common.Config;
@@ -18,8 +18,8 @@ Console.WriteLine("Connected to RabbitMQ");
 // - Create a consumer and subscribe to the queue
 // - Handle incoming messages by deserializing the JSON and printing the content to the console
 
-const string exchangeName = "chat";
-const string queueName = "chat_marius";
+const string exchangeName = "demo.fanout";
+const string queueName = "demo.consumer.queue";
 
 await using var channel = await connection.CreateChannelAsync();
 await channel.ExchangeDeclareAsync(
@@ -31,7 +31,7 @@ await channel.QueueDeclareAsync(
     queue: queueName,
     durable: false,
     exclusive: false,
-    autoDelete: false);
+    autoDelete: true);
 await channel.QueueBindAsync(
     queue: queueName,
     exchange: exchangeName,

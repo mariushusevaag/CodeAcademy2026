@@ -18,13 +18,13 @@ Console.WriteLine("Connected to RabbitMQ");
 // - Create a consumer and subscribe to the queue
 // - Handle incoming messages by deserializing the JSON and printing the content to the console
 
-const string exchangeName = "chat";
-const string queueName = "chat_marius";
+const string exchangeName = "demo.direct";
+const string queueName = "demo.consumer.queue";
 
 await using var channel = await connection.CreateChannelAsync();
 await channel.ExchangeDeclareAsync(
     exchange: exchangeName,
-    type: ExchangeType.Fanout,
+    type: ExchangeType.Direct,
     durable: false,
     autoDelete: false);
 await channel.QueueDeclareAsync(

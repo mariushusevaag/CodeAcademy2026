@@ -8,18 +8,18 @@ Console.WriteLine("Producer starting...");
 using var connection = await ConnectionHelper.ConnectAsync();
 Console.WriteLine("Connected to RabbitMQ");
 
-const string exchangeName = "chat";
-var publishInterval = TimeSpan.FromSeconds(2);
+const string exchangeName = "demo.topic";
+var publishInterval = TimeSpan.FromSeconds(5);
 
 await using var channel = await connection.CreateChannelAsync();
 
 await channel.ExchangeDeclareAsync(
     exchange: exchangeName,
-    type: ExchangeType.Fanout,
+    type: ExchangeType.Topic,
     durable: false,
     autoDelete: false);
 
-Console.WriteLine($"Declared fanout exchange '{exchangeName}'. Publishing every {publishInterval.TotalSeconds}s. Ctrl+C to stop.");
+Console.WriteLine($"Declared topic exchange '{exchangeName}'. Publishing every {publishInterval.TotalSeconds}s. Ctrl+C to stop.");
 
 using var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, e) =>
@@ -38,14 +38,17 @@ try
         {
             id = counter,
             timestamp = DateTimeOffset.UtcNow,
-            text = $"Hello from Bergen"
+            text = $"Hello from producer #{counter}"
         };
 
         var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
 
+        // var counterIsEven = counter % 2 == 0;
+        // var routingKey = counterIsEven ? "idem.public" : "idem.public.reply"; // must match binding key of consumer
+
         await channel.BasicPublishAsync(
             exchange: exchangeName,
-            routingKey: string.Empty, // ignored by fanout
+            routingKey: "idem.public.reply.mention", // required for topic
             body: body,
             cancellationToken: cts.Token);
 
